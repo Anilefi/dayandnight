@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Own game</title>
+
+
+    <script>
+        let KEY_SPACE = false; //32
+        let KEY_UP = false; //38
+        let KEY_DOWN = false; //40
+        let x = 500;
+        const INITIAL_Y = 400;
+        let y = INITIAL_Y;
+
+        let cloudx1 = 0;
+        let cloudx2 = 300;
+        let nightcloudx1 = 0;
+        let nightcloudx2 = 300;
+
+        let leafIndex = 0;
+        let targetPosX = x;
+        let acc = 6;
+        let acc1 = 6;
+        let acc2 = 12;
+
+        let starIndex = 0;
+
+        let dayMode = false;
+        let activeBox;
+
+        let playerImage;
+
+        let coordinates = [[172, 799, 1.58], [246, 814, -2], [333, 733, -1.2], [500, 690, -0.5], [695, 700, 1.4], [750, 800, -1.1], [980, 699, 1.1], [1098, 766, -1.5], [1174, 781, -1.0], [1293, 698, 1.0], [1367, 755, -2.5], [1500, 799, -1.1]];
+
+
+
+
+
+
+        function startGame() {
+            setInterval(update, 1000 / 25);
+            setInterval(leafUpdate, 300);
+            const canvas = document.getElementById("myCanvas");
+            canvas.addEventListener('mousemove', mouseMoving, false)
+            canvas.addEventListener('click', clickReporter, false);
+            canvas.addEventListener('dblclick', clickReporter2, false);
+            let aud = document.getElementById("gamemusic");
+            aud = document.getElementById ("walkingsound");
+            canvas.addEventListener('click', (e) => {
+                if (e.offsetX >= 802 && e.offsetX <= 939 && e.offsetY >= 553 && e.offsetY <= 670) {
+                    let img = document.getElementById("jumpscare");
+                    img.style = "";
+                    canvas.style = "display:none";
+                    
+                }
+
+            }, false);
+
+        }
+
+
+        function mouseMoving(e) {
+            if (e.offsetX >= 802 && e.offsetX <= 939 && e.offsetY >= 553 && e.offsetY <= 670) {
+                activeBox = document.getElementById("glowing");
+                document.body.style.cursor = "pointer";
+            } else {
+                document.body.style.cursor = "crosshair";
+                activeBox = document.getElementById("box");
+            }
+        }
+
+        function clickReporter(e) {
+            acc = acc1;
+            targetPosX = e.x - e.target.offsetLeft;
+            let audio= document.getElementById("gamemusic");
+            audio.play();
+
+            audio= document.getElementById("walkingsound");
+            audio.play();
+            
+        }
+
+        function clickReporter2(e) {
+            acc = acc2;
+            targetPosX = e.x - e.target.offsetLeft;
+        }
+
+        function leafUpdate() {
+            leafIndex++;
+            starIndex++;
+            if (leafIndex >= leafs.length) {
+                leafIndex = 0;
+            }
+            if (starIndex >= stars.length) {
+                starIndex = 0;
+            }
+        }
+
+
+
+        function update() {
+            if (targetPosX < x) {
+                x -= acc;
+                if (x < 0) {
+                    x = 0;
+                }
+                playerImage = document.getElementById("player1");
+            } 
+            
+            if (targetPosX > x) {
+                x += acc;
+                if (x > 1500) {
+                    x = 1500;
+                }
+                playerImage = document.getElementById("player1");
+            }
+            
+            if(Math.abs(targetPosX-x) < 12) {
+                playerImage = document.getElementById("josey");
+               let audio= document.getElementById("walkingsound");
+                audio.pause();
+            }
+
+
+            cloudx1 = cloudx1 + 1;
+            cloudx2 = cloudx2 + 2;
+
+            if (cloudx1 === 1500) {
+                cloudx1 = 0;
+            }
+            if (cloudx2 === 1500) {
+                cloudx2 = 0;
+            }
+            nightcloudx1 = nightcloudx1 + 1;
+            nightcloudx2 = nightcloudx2 + 2;
+
+            if (nightcloudx1 === 1500) {
+                nightcloudx1 = 0;
+            }
+            if (nightcloudx2 === 1500) {
+                nightcloudx2 = 0;
+            }
+            draw();
+        }
+
+    </script>
+</head>
+
+<body onload="javascript: startGame()">
+
+
+
+
+
+    <img id="background1" src="./img/background1.png" alt="" width="1500" height="850" style="display: none;">
+    <img id="background2" src="./img/background2.png" alt="" width="1500" height="850" style="display: none;">
+    <img id="background3" src="./img/background3.png" alt="" width="1500" height="850" style="display: none;">
+    <img id="normal" src="./img/background4.png" alt="" width="1500" height="850" style="display: none;">
+    <img id="clouds2" src="./img/clouds2.png" alt="" width="1500" height="850" style="display: none;">
+    <img id="player1" src="./img/walking.png" alt="" width="700" height="300" style="display: none;">
+    <img id="josey" src="./img/josey.png" alt="" width="700" height="300" style="display: none;">
+    <img id="wind" src="./img/wind.png" alt="" width="1500" height="850" style="display: none;">
+    <img id="leaf1" src="./img/falling1.png" alt="" width="293" height="146" style="display: none;">
+    <img id="leaf2" src="./img/falling2.png" alt="" width="320" height="175" style="display: none;">
+    <img id="leaf3" src="./img/falling3.png" alt="" width="419" height="277" style="display: none;">
+    <img id="leaf4" src="./img/falling4.png" alt="" width="459" height="225" style="display: none;">
+    <img id="leaf5" src="./img/falling5.png" alt="" width="503" height="157" style="display: none;">
+    <img id="leaf6" src="./img/falling6.png" alt="" width="345" height="86" style="display: none;">
+
+    <img id="moon" src="./img/moon.png" alt="" width="1500" height="850" style="display: none;">
+    <img id="night" src="./img/nightbackground.png" alt="" width="1500" height="850" style="display: none;">
+    <img id="nightcloud1" src="./img/nightclouds1.png" alt="" width="1500" height="850" style="display: none;">
+    <img id="nightcloud2" src="./img/nightclouds2.png" alt="" width="1500" height="850" style="display: none;">
+    <img id="bush" src="./img/bush.png" alt="" width="1500" height="850" style="display: none;">
+    <img id="box" src="./img/box.png" alt="" width="142" height="120" style="display: none;">
+    <img id="glowing" src="./img/glowing.png" alt="" width="141" height="120" style="display: none;">
+
+
+    <img id="star1" src="./img/shootingstar1.png" alt="" width="1500" height="850" style="display: none;">
+    <img id="star2" src="./img/shootingstar2.png" alt="" width="1500" height="850" style="display: none;">
+    <img id="star3" src="./img/shootingstar3.png" alt="" width="1500" height="850" style="display: none;">
+
+    <img id="jumpscare" src="./img/jumpscare.png" alt="" width="1920" heigth="1080" style="display: none;">
+
+
+    <div class="centered">
+        <canvas id="myCanvas" class="canvas" width="1500" height="850"></canvas>
+    </div>
+    </div>
+
+    <script>
+        const b1 = document.getElementById("background1");
+        const b2 = document.getElementById("background2");
+        const cloudImage1 = document.getElementById("clouds2");
+        const cloudImage2 = document.getElementById("background3");
+        const normal = document.getElementById("normal");
+        const wind = document.getElementById("wind");
+        const leaf1 = document.getElementById("leaf1");
+        const leaf2 = document.getElementById("leaf2");
+        const leaf3 = document.getElementById("leaf3");
+        const leaf4 = document.getElementById("leaf4");
+        const leaf5 = document.getElementById("leaf5");
+        const leaf6 = document.getElementById("leaf6");
+
+        const moon = document.getElementById("moon");
+        const night = document.getElementById("night");
+        const nightcloud1 = document.getElementById("nightcloud1");
+        const nightcloud2 = document.getElementById("nightcloud2");
+        const bush = document.getElementById("bush");
+
+
+        const star1 = document.getElementById("star1");
+        const star2 = document.getElementById("star2");
+        const star3 = document.getElementById("star3");
+
+
+        const leafs = [[leaf1, 410, 330], [leaf2, 450, 380], [leaf3, 470, 370], [leaf4, 540, 400], [leaf5, 550, 500], [leaf6, 600, 585]];
+        const stars = [[star1, 0, 0], [star2, 0, 0], [star3, 0, 0]];
+
+
+        function draw() {
+            const c = document.getElementById("myCanvas");
+            const ctx = c.getContext("2d");
+
+            if (dayMode) {
+                ctx.drawImage(b1, 0, 0);
+                ctx.drawImage(b2, 0, 0);
+                ctx.drawImage(cloudImage1, 0, 0, 1500 - cloudx1, 850, cloudx1, 0, 1500 - cloudx1, 850);
+                ctx.drawImage(cloudImage1, 1500 - cloudx1, 0, cloudx1, 850, 0, 0, cloudx1, 850);
+                ctx.drawImage(cloudImage2, 0, 0, 1500 - cloudx2, 850, cloudx2, 0, 1500 - cloudx2, 850);
+                ctx.drawImage(cloudImage2, 1500 - cloudx2, 0, cloudx2, 850, 0, 0, cloudx2, 850);
+                ctx.drawImage(normal, 0, 0);
+
+                var jetzt = new Date();
+                var sekunden = jetzt.getSeconds();
+                if (sekunden % 2 === 0) {
+                    ctx.drawImage(wind, 0, 0);
+
+                }
+
+                let leaf = leafs[leafIndex];
+                ctx.drawImage(leaf[0], leaf[1], leaf[2]);
+            }
+
+
+
+
+            else {
+                ctx.drawImage(night, 0, 0);
+                ctx.drawImage(moon, 0, 0);
+                ctx.drawImage(nightcloud1, 0, 0, 1500 - nightcloudx1, 850, nightcloudx1, 0, 1500 - nightcloudx1, 850);
+                ctx.drawImage(nightcloud1, 1500 - nightcloudx1, 0, nightcloudx1, 850, 0, 0, nightcloudx1, 850);
+                ctx.drawImage(nightcloud2, 0, 0, 1500 - nightcloudx2, 850, nightcloudx2, 0, 1500 - nightcloudx2, 850);
+                ctx.drawImage(nightcloud2, 1500 - nightcloudx2, 0, nightcloudx2, 850, 0, 0, nightcloudx2, 850);
+                ctx.drawImage(bush, 0, 0);
+                //  ctx.strokeStyle  = 'red';
+                //ctx.strokeRect(802, 553, 137, 117);
+                //ctx.stroke();
+                ctx.drawImage(activeBox || document.getElementById("box"), 800, 550);
+
+                let star = stars[starIndex];
+                //ctx.drawImage(star[0], star[1], star[2]);
+
+
+
+            }
+
+            ctx.drawImage(playerImage, x, getCurrentY());
+            if (x > 1400) {
+                dayMode = !dayMode;
+                x = 50;
+                y = INITIAL_Y;
+            }
+        }
+        function getCurrentY() {
+            for (let i = 0; i < coordinates.length; i++) {
+                let coordinate = coordinates[i];
+                let xC = coordinate[0];
+                let yC = coordinate[1];
+                if (x < xC && x > 0) {
+                    let diff = coordinate[2];
+                    if (Math.abs(targetPosX - x) < 6) {
+                        return y;
+                    }
+
+                    if (targetPosX > x) {
+                        y += diff;
+                        return y;
+                    }
+                    else if (targetPosX < x) {
+                        y -= diff;
+                        return y;
+                    }
+
+                }
+            }
+
+            return y;
+        }
+    </script>
+<audio controls id="walkingsound" autoplay loop style="display:none">
+    <source src="./img/walksound.mp3" type="audio/mp3">
+</audio>
+
+
+<audio controls id="gamemusic" autoplay loop style="display:none">
+    <source src="./img/gamemusic.mp3" type="audio/mp3">
+</audio>
+
+</body>
+
+</html>
